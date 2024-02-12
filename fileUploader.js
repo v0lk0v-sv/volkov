@@ -138,17 +138,15 @@ function handleMutation(mutationsList, observer) {
   });
 }
 
-document.addEventListener('DOMContentLoaded', function() {
-  var observer = new MutationObserver(handleMutation);
+var observer = new MutationObserver(handleMutation);
 
-  var targetNode = document.querySelector(".w-form-fail");
-  var config = { attributes: true, attributeFilter: ['style'] };
-  observer.observe(targetNode, config);
+var targetNode = document.querySelector(".w-form-fail");
+var config = { attributes: true, attributeFilter: ['style'] };
+observer.observe(targetNode, config);
 
-  function clickHandlerOnce() {
+function clickHandlerOnce() {
   console.log("Клик произошел, удаляем слушатель");
   document.querySelector(".w-form-fail").style.display = "none";
   document.removeEventListener("click", clickHandlerOnce);
   clearTimeout(timer);
-  }
-});
+}
