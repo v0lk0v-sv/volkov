@@ -119,6 +119,13 @@ document.addEventListener("flag", function () {
 var clickHandler;
 var timer;
 
+function clickHandlerOnce() {
+  console.log("Клик произошел, удаляем слушатель");
+  document.querySelector(".w-form-fail").style.display = "none";
+  document.removeEventListener("click", clickHandlerOnce);
+  clearTimeout(timer);
+}
+
 function handleMutation(mutationsList, observer) {
   mutationsList.forEach(function(mutation) {
     if (mutation.attributeName === 'style' && document.querySelector(".w-form-fail").style.display === 'block') {
@@ -143,10 +150,3 @@ var observer = new MutationObserver(handleMutation);
 var targetNode = document.querySelector(".w-form-fail");
 var config = { attributes: true, attributeFilter: ['style'] };
 observer.observe(targetNode, config);
-
-function clickHandlerOnce() {
-  console.log("Клик произошел, удаляем слушатель");
-  document.querySelector(".w-form-fail").style.display = "none";
-  document.removeEventListener("click", clickHandlerOnce);
-  clearTimeout(timer);
-}
