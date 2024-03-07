@@ -139,10 +139,10 @@ function closeSheet() {
     }
   }
 }
-
-document
-  .querySelector(".gfg-action.action-sheet-mask.extraMask")
-  .addEventListener("click", closeSheet);
+const element = document.querySelector(".gfg-action.action-sheet-mask.extraMask");
+if (element) {
+    element.addEventListener("click", closeSheet);
+  }
 
 window.addEventListener("scroll", function () {
   var header = document.getElementById("toolbar-wrap");
