@@ -139,10 +139,12 @@ function closeSheet() {
     }
   }
 }
-const element = document.querySelector(".gfg-action.action-sheet-mask.extraMask");
+const element = document.querySelector(
+  ".gfg-action.action-sheet-mask.extraMask"
+);
 if (element) {
-    element.addEventListener("click", closeSheet);
-  }
+  element.addEventListener("click", closeSheet);
+}
 
 window.addEventListener("scroll", function () {
   var header = document.getElementById("toolbar-wrap");
@@ -168,7 +170,9 @@ const emailErrorElement = document.getElementById("emailError");
 const messageErrorElement = document.getElementById("messageError");
 
 function checkInputs() {
-  let isMessageValid = validateMessage();
+  if (messageInput) {
+    let isMessageValid = validateMessage();
+  }
   let isEmailValid = isEmailTouched && validateEmail();
   let isValid = isEmailValid && isMessageValid;
 
@@ -236,22 +240,24 @@ emailInput.addEventListener("blur", function () {
 
 var messageInputLabel = document.getElementById("in-label-message");
 
-messageInput.addEventListener("focus", function () {
-  messageInputLabel.classList.add("in-label-active-qr-pf");
-});
+if (messageInputLabel) {
+  messageInput.addEventListener("focus", function () {
+    messageInputLabel.classList.add("in-label-active-qr-pf");
+  });
 
-messageInput.addEventListener("blur", function () {
-  isMessageTouched = true;
-  if (messageInput.value.trim() === "") {
-    messageErrorElement.classList.add("visible");
-    messageInput.classList.add("input-not-valid");
-    messageInputLabel.classList.remove("in-label-active-qr-pf");
-  } else {
-    messageErrorElement.classList.remove("visible");
-    messageInput.classList.remove("input-not-valid");
-  }
-  checkInputs();
-});
+  messageInput.addEventListener("blur", function () {
+    isMessageTouched = true;
+    if (messageInput.value.trim() === "") {
+      messageErrorElement.classList.add("visible");
+      messageInput.classList.add("input-not-valid");
+      messageInputLabel.classList.remove("in-label-active-qr-pf");
+    } else {
+      messageErrorElement.classList.remove("visible");
+      messageInput.classList.remove("input-not-valid");
+    }
+    checkInputs();
+  });
+}
 
 var nameInput = document.getElementById("name");
 var nameInputLabel = document.getElementById("in-label-name");
@@ -270,7 +276,7 @@ window.onload = function () {
   if (nameInput.value !== "") {
     nameInputLabel.classList.add("in-label-active-qr-pf");
   }
-  if (messageInput.value !== "") {
+  if (messageInput && messageInput.value !== "") {
     messageInputLabel.classList.add("in-label-active-qr-pf");
   }
   if (emailInput.value !== "") {
@@ -289,7 +295,9 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 function toggleSubmitButton() {
   let isEmailValid = emailRegex.test(emailInput.value);
-  let isMessageValid = messageInput.value.trim() !== "";
+  if (messageInput) {
+    let isMessageValid = messageInput.value.trim() !== "";
+  }
 
   if (isEmailValid && isMessageValid) {
     submitButton.disabled = false;
@@ -300,4 +308,6 @@ function toggleSubmitButton() {
   }
 }
 emailInput.addEventListener("input", toggleSubmitButton);
-messageInput.addEventListener("input", toggleSubmitButton);
+if (messageInput) {
+  messageInput.addEventListener("input", toggleSubmitButton);
+}
