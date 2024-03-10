@@ -1,0 +1,188 @@
+<script src="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.js"></script>
+<script
+  src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"
+  integrity="sha512-16esztaSRplJROstbIIdwX3N97V1+pZvV33ABoG1H2OyTttBxEGkTsoIVsiP1iaTtM8b3+hu2kB6pQ4Clr5yug=="
+  crossorigin="anonymous"
+  referrerpolicy="no-referrer"
+></script>
+<script
+  src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollToPlugin.min.js"
+  integrity="sha512-v/m68W+vaGN/6igoyFpd4GlQzu0jx9/n5gr2PKq5vif+RObyGKHse384YHrOULaxZ810XhlHUrmB3U8UnPB19Q=="
+  crossorigin="anonymous"
+  referrerpolicy="no-referrer"
+></script>
+<script
+  src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"
+  integrity="sha512-Ic9xkERjyZ1xgJ5svx3y0u3xrvfT/uPkV99LBwe68xjy/mGtO+4eURHZBW2xW4SZbFrF1Tf090XqB+EVgXnVjw=="
+  crossorigin="anonymous"
+  referrerpolicy="no-referrer"
+></script>
+<!-- <script src="https://dl.dropbox.com/scl/fi/4tpmbbl0a5mv3x9mycnti/script.js?rlkey=z9lkxsoz6k2a3aywnf4poxh6d"></script> -->
+<script src="https://cdn.jsdelivr.net/gh/v0lk0v-sv/volkov@latest/script.js"></script>
+<!-- [Attributes by Finsweet] Disable scrolling -->
+<!-- <script defer src="https://cdn.jsdelivr.net/npm/@finsweet/attributes-scrolldisable@1/scrolldisable.js"></script> -->
+<script>
+  const ddBlocks = document.querySelectorAll(".r-specs__dd");
+  const imgBlocks = document.querySelectorAll(".r-specs__img");
+
+  ddBlocks.forEach((ddBlock, index) => {
+    ddBlock.addEventListener("click", () => {
+      imgBlocks.forEach((block) => block.classList.remove("is-open"));
+      imgBlocks[index].classList.add("is-open");
+    });
+  });
+
+  $(".sw-component").each(function (index) {
+    let loopMode = false;
+    if ($(this).attr("loop-mode") === "true") {
+      loopMode = true;
+    }
+    let sliderDuration = 250;
+    if ($(this).attr("slider-duration") !== undefined) {
+      sliderDuration = +$(this).attr("slider-duration");
+    }
+
+    const $swiperContainer = $(this).find(".swiper")[0];
+    const $menuItems = $(this).find(".sw-menu__item");
+
+    const swiper = new Swiper($swiperContainer, {
+      speed: sliderDuration,
+      effect: "fade",
+      loop: loopMode,
+      autoHeight: true,
+      centeredSlides: loopMode,
+      followFinger: false,
+      freeMode: false,
+      slideToClickedSlide: false,
+      slidesPerView: 1,
+      spaceBetween: "0%",
+      rewind: false,
+      keyboard: {
+        enabled: true,
+        onlyInViewport: true,
+      },
+      breakpoints: {
+        479: {
+          allowTouchMove: true,
+        },
+        991: {
+          allowTouchMove: false,
+        },
+      },
+    });
+
+    $menuItems.on("click", function () {
+      const clickedIndex = $menuItems.index(this);
+      swiper.slideTo(clickedIndex);
+    });
+
+    swiper.on("slideChange", function () {
+      const activeIndex = swiper.activeIndex;
+      $menuItems.removeClass("is-active");
+      $menuItems.eq(activeIndex).addClass("is-active");
+    });
+  });
+
+  // Функция для обработки изменения видимости
+  // function handleVisibilityChange(entries) {
+  //   const scrollNav = document.getElementById("scroll-nav");
+  //   const lDArrow = document.querySelector(".l-d__arrow");
+  //   const purNavLinks = document.querySelector(".pur-nav__links");
+
+  //   if (entries[0].isIntersecting) {
+  //     // Если блок входит в видимость, удалите класс "active" у scrollNav,
+  //     // и класс "act" у lDArrow и purNavLinks
+  //     scrollNav.classList.remove("active");
+  //     lDArrow.classList.remove("act");
+  //     if (purNavLinks) {
+  //       purNavLinks.classList.remove("act");
+  //     }
+  //   } else {
+  //     // Если блок выходит из видимости, добавьте класс "active" к scrollNav
+  //     scrollNav.classList.add("active");
+  //   }
+  // }
+
+  // Создаем экземпляр Intersection Observer
+  // const observer = new IntersectionObserver(handleVisibilityChange);
+
+  // Отслеживаем видимость блока #main-1st
+  // const main1st = document.getElementById("main-1st");
+  // observer.observe(main1st);
+
+  // $(".pur-nav__link.no-underline").on("mouseenter", function () {
+  //   $(this).siblings(".pur-nav__link.no-underline").addClass("hvr");
+  // });
+  // $(".pur-nav__link.no-underline").on("mouseleave", function () {
+  //   $(this).siblings(".pur-nav__link.no-underline").removeClass("hvr");
+  // });
+
+  // document.addEventListener("DOMContentLoaded", function () {
+  //   const lD = document.querySelector(".l-d");
+  //   const purNavLinks = document.querySelector(".pur-nav__links");
+  //   const lDArrow = document.querySelector(".l-d__arrow");
+  //   const purNavLinksWhN = document.querySelectorAll(".pur-nav__link.wh-n");
+
+  //   let lDClickCount = 0;
+
+  //   lD.addEventListener("click", function () {
+  //     if (lDClickCount % 2 === 0) {
+  //       purNavLinks.classList.add("act");
+  //       lDArrow.classList.add("act");
+  //     } else {
+  //       purNavLinks.classList.remove("act");
+  //       lDArrow.classList.remove("act");
+  //     }
+  //     lDClickCount = (lDClickCount + 1) % 2; // Переключаем между 0 и 1
+  //   });
+
+  //   purNavLinksWhN.forEach(function (purNavLinkWhN) {
+  //     purNavLinkWhN.addEventListener("click", function () {
+  //       purNavLinks.classList.remove("act");
+  //       lDArrow.classList.remove("act");
+  //       lDClickCount = 0; // Сбрасываем количество кликов на блоке с классом l-d
+  //     });
+  //   });
+  // });
+</script>
+<script>
+  $(".input").on("focusin", function () {
+    $(this).siblings(".in-label--is-pe-none").addClass("is-active");
+  });
+  $(".input").on("focusout", function () {
+    if ($(this).val().length == 0) {
+      $(this).siblings(".in-label--is-pe-none").removeClass("is-active");
+    }
+  });
+</script>
+<script>
+  $(".fs_modal-2_input-extra-sxsw").on("focusin", function () {
+    $(this)
+      .siblings(".fs_modal-2_form_placeholder")
+      .addClass("in-label-active-qr-pf");
+  });
+  $(".fs_modal-2_input-extra-sxsw").on("focusout", function () {
+    if ($(this).val().length == 0) {
+      $(this)
+        .siblings(".fs_modal-2_form_placeholder")
+        .removeClass("in-label-active-qr-pf");
+    }
+  });
+</script>
+<script>
+// Not a class adder example, just some optimization to our nav ;)
+//nav toggle
+Webflow.push(function() {
+  $('.btn-r -sxsw').click(function(e) {
+    e.preventDefault();
+	if($('html, body').css('overflow') === 'hidden'){
+	   $('html, body').css('overflow', 'unset');
+	}
+	else if($('html, body').css('overflow') === 'unset'){
+    	$('html, body').css('overflow', 'hidden');
+  	}
+  });
+});
+</script>
+
+<script src="https://cdn.jsdelivr.net/gh/v0lk0v-sv/volkov@latest/provide-feedback_v3.js"></script>

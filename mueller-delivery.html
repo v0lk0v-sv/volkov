@@ -1,0 +1,236 @@
+<script
+  src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"
+  integrity="sha512-16esztaSRplJROstbIIdwX3N97V1+pZvV33ABoG1H2OyTttBxEGkTsoIVsiP1iaTtM8b3+hu2kB6pQ4Clr5yug=="
+  crossorigin="anonymous"
+  referrerpolicy="no-referrer"
+></script>
+<script
+  src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollToPlugin.min.js"
+  integrity="sha512-v/m68W+vaGN/6igoyFpd4GlQzu0jx9/n5gr2PKq5vif+RObyGKHse384YHrOULaxZ810XhlHUrmB3U8UnPB19Q=="
+  crossorigin="anonymous"
+  referrerpolicy="no-referrer"
+></script>
+<script
+  src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"
+  integrity="sha512-Ic9xkERjyZ1xgJ5svx3y0u3xrvfT/uPkV99LBwe68xjy/mGtO+4eURHZBW2xW4SZbFrF1Tf090XqB+EVgXnVjw=="
+  crossorigin="anonymous"
+  referrerpolicy="no-referrer"
+></script>
+<!-- <script src="https://dl.dropbox.com/scl/fi/4tpmbbl0a5mv3x9mycnti/script.js?rlkey=z9lkxsoz6k2a3aywnf4poxh6d"></script> -->
+<script src="https://cdn.jsdelivr.net/gh/v0lk0v-sv/volkov@latest/script.js"></script>
+
+<script>
+  mapboxgl.accessToken =
+    "pk.eyJ1Ijoia2FuZGlseWFuIiwiYSI6ImNrNGJmZ240MzBkNzIzcnA4MmV2dGlqdG0ifQ.jvQHDiGEsSqXxKU_cQUWiQ";
+
+  const map = new mapboxgl.Map({
+    container: "map-3",
+    style: "mapbox://styles/kandilyan/clsol9x14008401pkdmoyd0r6",
+    center: [-97.701785, 30.298997],
+    zoom: 12.78,
+    scrollZoom: false,
+    dragPan: false,
+  });
+
+  var current_popup, current_marker, current_item;
+  let map2;
+
+  var btnShowElements = document.querySelectorAll(
+    '[fs-modal-element="open-1"]'
+  );
+
+  function showMap() {
+    if (typeof map2 === "undefined" || map2 === null) {
+      map2 = new mapboxgl.Map({
+        container: "map-4",
+        style: "mapbox://styles/kandilyan/clsol9x14008401pkdmoyd0r6",
+        center: [-97.701654, 30.298766],
+        zoom: 12.85,
+      });
+      map2.on("load", () => {
+        map2.resize();
+      });
+    } else {
+    }
+
+    $(".fs_modal-2_wrapper-rests .w-dyn-item").each(function (index) {
+      let cmsItem = $(this);
+      let lat = cmsItem.find(".lat").text();
+      let lon = cmsItem.find(".lon").text();
+      let el = document.createElement("div");
+      el.classList.add("star");
+      let mark = this.marker;
+      mark = new mapboxgl.Marker(el).setLngLat([lon, lat]).addTo(map2);
+      el.addEventListener("click", () => {
+        if (current_marker != undefined) {
+          current_item.classList.remove("active");
+          current_marker.classList.remove("show");
+        }
+        current_item = this;
+        current_item.classList.add("active");
+        current_marker = el;
+        current_marker.classList.add("show");
+        map2.flyTo({
+          center: [lon, lat],
+          zoom: 15,
+          essential: true,
+        });
+      });
+      this.addEventListener("click", () => {
+        map2.flyTo({
+          center: [lon, lat],
+          zoom: 15,
+          essential: true,
+        });
+        if (current_marker != undefined) {
+          current_item.classList.remove("active");
+          current_marker.classList.remove("show");
+        }
+        el.classList.add("show");
+        current_marker = el;
+        current_item = this;
+        current_item.classList.add("active");
+      });
+      var startHoursElement = $(this).find(".location-start-hours");
+      var endHoursElement = $(this).find(".location-end-hours");
+      var statusElement = $(this).find(".location-status");
+      var workHoursElement = $(this).find(".location-work-hours");
+      if (
+        startHoursElement.length &&
+        endHoursElement.length &&
+        statusElement.length
+      ) {
+        var cstTime = new Date().toLocaleString("en-US", {
+          timeZone: "America/Chicago",
+        });
+        var currentDate = new Date(cstTime);
+        var currentHours = currentDate.getHours();
+        var currentMinutes = currentDate.getMinutes();
+        var startHours = parseAmPmTime(startHoursElement.text());
+        var endHours = parseAmPmTime(endHoursElement.text());
+        var isOpen = currentHours >= startHours && currentHours < endHours;
+        statusElement.text(isOpen ? "Open" : "Closed");
+        if (!isOpen) {
+          statusElement.addClass("rest-closed");
+          workHoursElement.text("Opens " + startHoursElement.text());
+        } else {
+          workHoursElement.text("Closes " + endHoursElement.text());
+        }
+        function parseAmPmTime(timeString) {
+          var timeArray = timeString.split(" ");
+          var hours = parseInt(timeArray[0]);
+          var amPm = timeArray[1].toLowerCase();
+          if (amPm === "pm" && hours !== 12) {
+            hours += 12;
+          } else if (amPm === "am" && hours === 12) {
+            hours = 0;
+          }
+          return hours;
+        }
+      }
+    });
+  }
+  btnShowElements.forEach(function (btn) {
+    btn.addEventListener("click", showMap);
+  });
+
+  $(".padding-global .w-dyn-item").each(function (index) {
+    let cmsItem = $(this);
+    let lat = cmsItem.find(".lat").text();
+    let lon = cmsItem.find(".lon").text();
+    let el = document.createElement("div");
+    el.classList.add("star");
+    let mark = this.marker;
+    mark = new mapboxgl.Marker(el).setLngLat([lon, lat]).addTo(map);
+
+    el.addEventListener("click", () => {
+      if (current_marker != undefined) {
+        current_item.classList.remove("active");
+        current_marker.classList.remove("show");
+      }
+      current_item = this;
+      current_item.classList.add("active");
+      current_marker = el;
+      current_marker.classList.add("show");
+      map.flyTo({
+        center: [lon, lat],
+        zoom: 15,
+        essential: true,
+      });
+    });
+
+    this.addEventListener("click", () => {
+      map.flyTo({
+        center: [lon, lat],
+        zoom: 15,
+        essential: true,
+      });
+      map2.flyTo({
+        center: [lon, lat],
+        zoom: 15,
+        essential: true,
+      });
+
+      if (current_marker != undefined) {
+        current_item.classList.remove("active");
+        current_marker.classList.remove("show");
+      }
+
+      el.classList.add("show");
+      current_marker = el;
+      current_item = this;
+      current_item.classList.add("active");
+    });
+    var startHoursElement = $(this).find(".location-start-hours");
+    var endHoursElement = $(this).find(".location-end-hours");
+    var statusElement = $(this).find(".location-status");
+    var workHoursElement = $(this).find(".location-work-hours");
+
+    if (
+      startHoursElement.length &&
+      endHoursElement.length &&
+      statusElement.length
+    ) {
+      var cstTime = new Date().toLocaleString("en-US", {
+        timeZone: "America/Chicago",
+      });
+      var currentDate = new Date(cstTime);
+      var currentHours = currentDate.getHours();
+      var currentMinutes = currentDate.getMinutes();
+
+      var startHours = parseAmPmTime(startHoursElement.text());
+      var endHours = parseAmPmTime(endHoursElement.text());
+
+      var isOpen = currentHours >= startHours && currentHours < endHours;
+
+      statusElement.text(isOpen ? "Open" : "Closed");
+
+      if (!isOpen) {
+        statusElement.addClass("rest-closed");
+        workHoursElement.text("Opens " + startHoursElement.text());
+      } else {
+        workHoursElement.text("Closes " + endHoursElement.text());
+      }
+
+      function parseAmPmTime(timeString) {
+        var timeArray = timeString.split(" ");
+        var hours = parseInt(timeArray[0]);
+        var amPm = timeArray[1].toLowerCase();
+
+        if (amPm === "pm" && hours !== 12) {
+          hours += 12;
+        } else if (amPm === "am" && hours === 12) {
+          hours = 0;
+        }
+
+        return hours;
+      }
+    }
+  });
+  var mq = window.matchMedia("(min-width: 767px)");
+
+  if (!mq.matches) {
+    map.setZoom(12.78); //set map zoom level for desktop size
+    map.setCenter([-97.701785, 30.298997]);
+  }
+</script>
